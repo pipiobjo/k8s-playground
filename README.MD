@@ -22,26 +22,26 @@ Setup K8s Cluster
 
 ```
 kubectl config current-context    
-kind-degussa-dbc
+kind-myscope
 
 
 kubectl -n kube-system get pods 
 NAME                                                READY   STATUS    RESTARTS   AGE
 coredns-64897985d-g42h9                             1/1     Running   0          14m
 coredns-64897985d-q8tn5                             1/1     Running   0          14m
-etcd-degussa-dbc-control-plane                      1/1     Running   0          15m
+etcd-myscope-control-plane                      1/1     Running   0          15m
 kindnet-kb8xw                                       1/1     Running   0          14m
-kube-apiserver-degussa-dbc-control-plane            1/1     Running   0          15m
-kube-controller-manager-degussa-dbc-control-plane   1/1     Running   0          15m
+kube-apiserver-myscope-control-plane            1/1     Running   0          15m
+kube-controller-manager-myscope-control-plane   1/1     Running   0          15m
 kube-proxy-dn4cs                                    1/1     Running   0          14m
-kube-scheduler-degussa-dbc-control-plane            1/1     Running   0          15m
+kube-scheduler-myscope-control-plane            1/1     Running   0          15m
 metrics-server-746bcc574b-nnpcw                     1/1     Running   0          14m
 
 
 
 kubectl top nodes             
 NAME                        CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
-degussa-dbc-control-plane   334m         4%     790Mi           2%        
+myscope-control-plane   334m         4%     790Mi           2%        
 
 
 ```
