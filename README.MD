@@ -2,7 +2,7 @@
 
 ## Requirements
 
-* Install kind cli from https://github.com/kubernetes-sigs/kind
+* Install kind cli from <https://github.com/kubernetes-sigs/kind>
 
 ## K8s
 
@@ -46,43 +46,59 @@ myscope-control-plane   334m         4%     790Mi           2%
 
 ```
 
-
-
 ## Remove / uninstall k8s
 
 * Removes the whole k8s cluster
 * Stops all containers
 * Removes the created container registry
 
-
 ```bash
-
-./localDev.sh -rm
-
+./localDev.sh -d
 ```
 
+If you want to remove everything, like docker network or stored images call, consider calling:
+
+```bash
+docker system prune
+```
 
 ## Activate kubectl autocompletion
 
-check according to your terminal https://kubernetes.io/docs/tasks/tools/included/
+check according to your terminal <https://kubernetes.io/docs/tasks/tools/included/>
 
-. Sample
+Activate for zsh
+
 ```bash
-
-kubectl -n ofc get po [Press 'TAB']
-
+source <(kubectl completion zsh)
 ```
 
+Sample Usage
 
+```bash
+kubectl -n ofc get po [Press 'TAB']
+```
 
 ## Kind Troubleshooting
-
 
 Query Container Reqistry for all images
 
 ```bash
-curl -s http://localhost:5005/v2/_catalog | jq
+curl -s "http://localhost:5000/v2/_catalog"  | jq
 {
-"repositories": []
+  "repositories": [
+    "blueprint-greeting"
+  ]
 }
+```
+
+Query tags for a specific image
+
+```bash
+curl -s "http://localhost>:5000/v2/$MY_IMAGE_NAME/tags/list" | jq
+```
+
+Query image information for a specific image and tag
+
+```bash
+curl -s "http://localhost>:5000/v2/$MY_IMAGE_NAME/manifests/$TAG_NAME" | jq
 ```
