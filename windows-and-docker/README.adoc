@@ -120,14 +120,24 @@ Connecting to wsl2 docker daemon
 docker -H "tcp://localhost:2375" ps
 ```
 
-Set new environment variable
-DOCKER_HOST=tcp://localhost:2375
+Set new environment variable, using IPV6 for vscode
+DOCKER_HOST=tcp://[::1]:2375
+
 image::images/env-variable-docker-host.png[]
 
 .Restart windows or just start a new Powershell
 ```PS
 docker ps
 ```
+
+Alternative
+```PS
+docker context create --docker host=tcp://[::1]:2375 win2linuxdocker
+docker context use win2linuxdocker
+```
+
+
+
 
 ## Nested virtualization in linux - to test the shit ;-)
 
