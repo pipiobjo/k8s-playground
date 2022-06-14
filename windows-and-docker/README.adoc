@@ -61,7 +61,7 @@ sudo mkdir /etc/docker
 
 sudo bash -c 'cat <<EOF >>/etc/docker/daemon.json
 {
-   "hosts": ["unix:///mnt/wsl/shared-docker/docker.sock", "tcp://0.0.0.0:2375"]
+   "hosts": ["unix:///mnt/wsl/shared-docker/docker.sock", "tcp://0.0.0.0:2375"],
    "features": {
         "buildkit": true
    }
