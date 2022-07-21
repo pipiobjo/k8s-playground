@@ -1,0 +1,244 @@
+= Local Development Environment
+:toc:
+:caution-caption: ☠
+:important-caption: ❗
+:note-caption: 🛈
+:tip-caption: 💡
+:warning-caption: ⚠
+ifdef::env-github[]
+rendered by GitHub Asciidoctor {asciidoctor-version}.
+endif::[]
+ifndef::env-github[]
+rendered by Asciidoctor {asciidoctor-version}
+endif::[]
+
+
+== Overview
+
+This repo should help you to setup a local development environment
+
+
+== Git checkout
+
+The provided checkout.sh is meant for the initial checkout of the project to streamline folder structure and names.
+
+
+[source,bash]
+----
+
+./checkout.sh
+
+----
+
+== Linux asdf-vm setup
+
+If you are a linux user you ease your setup effort by using asdf.
+
+
+[source,bash]
+----
+
+./initAsdf-vm.sh
+
+----
+
+Please ensure that your maven installation uses the proper jvm version.
+For example:
+
+[source,bash]
+----
+cat ~/.mavenrc
+JAVA_HOME=~/.asdf/installs/java/adoptopenjdk-17.0.2+8
+
+# double check it via
+mvn --version
+Apache Maven 3.6.3
+Maven home: /usr/share/maven
+Java version: 17.0.2, vendor: Eclipse Adoptium, runtime: /home/bjoern/.asdf/installs/java/adoptopenjdk-17.0.2+8
+Default locale: de_DE, platform encoding: UTF-8
+OS name: "linux", version: "5.11.0-49-generic", arch: "amd64", family: "unix"
+----
+
+
+
+== Build libs
+
+During the service / container build we rely on some liberarys. To build them beforehand call following script.
+
+[source,bash]
+----
+
+./buildLibs.sh
+
+----
+
+
+If you change some of the libraries can rebuild them manually or via this script and store them in your local maven repository directory.
+By default ~/.m2/repository
+
+
+
+== Local Kubernetes
+
+To reduce turnaround cycles we are able to setup a local kubernetes cluster to test the kubernetes cluster behaviour locally.
+
+
+
+=== Requirements
+
+==== Mandatory tools
+* Install kind cli and make it available in your PATH https://github.com/kubernetes-sigs/kind
+* Install kubectl and make it available in your PATH https://kubernetes.io/docs/tasks/tools/
+* Install kustomize and make it available in your PATH https://kubectl.docs.kubernetes.io/installation/kustomize/binaries/
+* Install helm and make it available in your PATH https://helm.sh/docs/intro/install/
+
+[TIP]
+.optional: kind autocompletion for zsh
+====
+
+[source,bash]
+----
+source <(kind completion zsh)
+----
+
+====
+
+==== Optional tools
+
+
+===== k9s
+
+Terminal based UI to interact with your Kubernetes clusters.
+
+<https://k9scli.io/>
+
+
+``
+
+
+=== K8s Setup
+
+Setup K8s Cluster
+
+* Setup K8s and update kubectl config
+* Install Ingress
+* Install Metriks Server
+
+```bash
+
+./k8s/localK8s.sh
+
+```
+
+### Check if k8s is setup correct
+
+```
+kubectl config current-context
+kind-k8s-playground
+
+
+coredns-6d4b75cb6d-pvmvm                               1/1     Running   0          2m5s
+coredns-6d4b75cb6d-q458h                               1/1     Running   0          2m5s
+etcd-k8s-playground-control-plane                      1/1     Running   0          2m17s
+kindnet-p2gb7                                          1/1     Running   0          2m5s
+kube-apiserver-k8s-playground-control-plane            1/1     Running   0          2m17s
+kube-controller-manager-k8s-playground-control-plane   1/1     Running   0          2m17s
+kube-proxy-n5fxk                                       1/1     Running   0          2m5s
+kube-scheduler-k8s-playground-control-plane            1/1     Running   0          2m20s
+metrics-server-555c8cbc74-rj868                        1/1     Running   0          2m5s
+
+
+
+
+kubectl top nodes
+NAME                           CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%
+k8s-playground-control-plane   228m         2%     677Mi           2%
+
+
+
+```
+
+## Remove / uninstall k8s
+
+* Removes the whole k8s cluster
+* Stops all containers
+* Removes the created container registry
+
+```bash
+./localDev.sh -d
+```
+
+If you want to remove everything, like docker network or stored images call, consider calling:
+
+```bash
+docker images | grep '3 weeks ago' | awk '{print $1 ":" $2}' | xargs -n 1 docker rmi
+docker container prune
+docker network prune
+docker system prune
+docker volume prune
+docker builder prune
+```
+
+## Activate kubectl autocompletion
+
+check according to your terminal <https://kubernetes.io/docs/tasks/tools/included/>
+
+Activate for zsh
+
+```bash
+source <(kubectl completion zsh)
+```
+
+Sample Usage
+
+```bash
+kubectl -n local get po [Press 'TAB']
+```
+
+## Kind Troubleshooting
+
+Query Container Reqistry for all images
+
+```bash
+curl -s "http://localhost:5003/v2/_catalog" | jq
+{
+  "repositories": [
+    "my-backend",
+    "my-security",
+    "my-service",
+    "my-workflow"
+  ]
+}
+
+```
+
+Query tags for a specific image
+
+```bash
+curl -s "http://localhost:5003/v2/$MY_IMAGE_NAME/tags/list" | jq
+```
+
+Query image information for a specific image and tag
+
+```bash
+curl -s "http://localhost:5003/v2/$MY_IMAGE_NAME/manifests/$TAG_NAME" | jq
+```
+
+
+### Clear container registry
+
+Sometimes its necessary to remove all images from the container registry. For that we created a script
+
+```bash
+./k8s/scripts/clearContainerRegistry.sh
+```
+
+### Free diskspace
+
+
+Free diskspace by clean up docker
+```bash
+docker system prune
+docker image prune
+docker volume prune
+```
