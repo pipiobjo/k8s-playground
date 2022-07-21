@@ -21,8 +21,8 @@ echo "$KUBECTL_VERSION=$KUBECTL_VERSION"
 #KUBECTL_VERSION=1.23.6
 #KUBECTL_VERSION=1.24.3
 asdf plugin-add kubectl
-asdf install kubectl 1.23.6
-asdf local kubectl 1.23.6
+asdf install kubectl $KUBECTL_VERSION
+asdf local kubectl $KUBECTL_VERSION
 
 asdf plugin-add helm
 asdf install helm 3.8.2
@@ -47,5 +47,8 @@ asdf local tilt 0.30.5
 asdf plugin-add dive https://github.com/looztra/asdf-dive
 asdf install dive 0.10.0
 asdf local dive 0.10.0
+
+echo "reload shell $SHELL"
+${SHELL}
 
 cd $CURRENT_DIR
