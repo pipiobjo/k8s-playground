@@ -25,12 +25,6 @@ function usage {
     exit 1
 }
 
-_prepareForApplication(){
-  echo "Prepare for Application: Setup local namespace "
-  kubectl create namespace local
-
-}
-
 for i in "$@"; do
   case $i in
     -r|--reset-k8s)
@@ -78,8 +72,5 @@ if $RESET_K8S ; then
 fi
 
 if ! $SKIP_INFRASTRUCTURE ; then
-  #echo "start cluster"
   $SCRIPT_DIR/K8skindCluster.sh start
-  _prepareForApplication
-
 fi

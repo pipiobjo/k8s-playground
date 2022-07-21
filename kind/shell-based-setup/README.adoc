@@ -15,20 +15,8 @@ endif::[]
 
 == Overview
 
-This repo should help you to setup a local development environment
+This documentation should help you to setup a local k8s environment.
 
-
-== Git checkout
-
-The provided checkout.sh is meant for the initial checkout of the project to streamline folder structure and names.
-
-
-[source,bash]
-----
-
-./checkout.sh
-
-----
 
 == Linux asdf-vm setup
 
@@ -42,46 +30,9 @@ If you are a linux user you ease your setup effort by using asdf.
 
 ----
 
-Please ensure that your maven installation uses the proper jvm version.
-For example:
-
-[source,bash]
-----
-cat ~/.mavenrc
-JAVA_HOME=~/.asdf/installs/java/adoptopenjdk-17.0.2+8
-
-# double check it via
-mvn --version
-Apache Maven 3.6.3
-Maven home: /usr/share/maven
-Java version: 17.0.2, vendor: Eclipse Adoptium, runtime: /home/bjoern/.asdf/installs/java/adoptopenjdk-17.0.2+8
-Default locale: de_DE, platform encoding: UTF-8
-OS name: "linux", version: "5.11.0-49-generic", arch: "amd64", family: "unix"
-----
-
-
-
-== Build libs
-
-During the service / container build we rely on some liberarys. To build them beforehand call following script.
-
-[source,bash]
-----
-
-./buildLibs.sh
-
-----
-
-
-If you change some of the libraries can rebuild them manually or via this script and store them in your local maven repository directory.
-By default ~/.m2/repository
-
 
 
 == Local Kubernetes
-
-To reduce turnaround cycles we are able to setup a local kubernetes cluster to test the kubernetes cluster behaviour locally.
-
 
 
 === Requirements
@@ -121,42 +72,79 @@ Terminal based UI to interact with your Kubernetes clusters.
 Setup K8s Cluster
 
 * Setup K8s and update kubectl config
-* Install Ingress
+* Install Ingress (nginx / traefik)
 * Install Metriks Server
 
-```bash
+.Start the k8s cluster
+[source,bash]
+----
 
-./k8s/localK8s.sh
+./kind/shell-based-setup/localK8s.sh
 
-```
+----
 
-### Check if k8s is setup correct
+.Reset / restart the cluster
+[source,bash]
+----
 
-```
-kubectl config current-context
+./kind/shell-based-setup/localK8s.sh -r
+
+----
+
+### Verify k8s setup
+
+.Verify kubectl context is updated
+[source,bash]
+----
+$ kubectl config current-context
 kind-k8s-playground
+----
+
+.Verify pods are running
+[source,bash]
+----
+$ kubectl get pods -A
+NAMESPACE            NAME                                                   READY   STATUS    RESTARTS   AGE
+demo                 helloweb-67dffcd76f-s8mq2                              1/1     Running   0          40m
+ingress-nginx        ingress-nginx-controller-5dff8dcf67-f4qz6              1/1     Running   0          40m
+kube-system          coredns-6d4b75cb6d-r7cbn                               1/1     Running   0          41m
+kube-system          coredns-6d4b75cb6d-zpgtw                               1/1     Running   0          41m
+kube-system          etcd-k8s-playground-control-plane                      1/1     Running   0          41m
+kube-system          kindnet-hgpw8                                          1/1     Running   0          41m
+kube-system          kube-apiserver-k8s-playground-control-plane            1/1     Running   0          41m
+kube-system          kube-controller-manager-k8s-playground-control-plane   1/1     Running   0          41m
+kube-system          kube-proxy-crjww                                       1/1     Running   0          41m
+kube-system          kube-scheduler-k8s-playground-control-plane            1/1     Running   0          41m
+kube-system          metrics-server-555c8cbc74-smnbx                        1/1     Running   0          41m
+local-path-storage   local-path-provisioner-9cd9bd544-x4h62                 1/1     Running   0          41m
+----
 
 
-coredns-6d4b75cb6d-pvmvm                               1/1     Running   0          2m5s
-coredns-6d4b75cb6d-q458h                               1/1     Running   0          2m5s
-etcd-k8s-playground-control-plane                      1/1     Running   0          2m17s
-kindnet-p2gb7                                          1/1     Running   0          2m5s
-kube-apiserver-k8s-playground-control-plane            1/1     Running   0          2m17s
-kube-controller-manager-k8s-playground-control-plane   1/1     Running   0          2m17s
-kube-proxy-n5fxk                                       1/1     Running   0          2m5s
-kube-scheduler-k8s-playground-control-plane            1/1     Running   0          2m20s
-metrics-server-555c8cbc74-rj868                        1/1     Running   0          2m5s
-
-
-
-
-kubectl top nodes
+.Verify metrics are available
+[source,bash]
+----
+$ kubectl top nodes
 NAME                           CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%
 k8s-playground-control-plane   228m         2%     677Mi           2%
+----
 
 
+.Verify demo application is responding properly
+[source,bash]
+----
+$ curl http://localhost:48080/demo/hello
+Hello, world!
+Version: 1.0.0
+Hostname: helloweb-67dffcd76f-s8mq2
 
-```
+$ curl -k https://localhost:48443/demo/hello
+Hello, world!
+Version: 1.0.0
+Hostname: helloweb-67dffcd76f-s8mq2
+
+----
+
+
 
 ## Remove / uninstall k8s
 
@@ -164,14 +152,17 @@ k8s-playground-control-plane   228m         2%     677Mi           2%
 * Stops all containers
 * Removes the created container registry
 
-```bash
-./localDev.sh -d
-```
+.Reset / restart the cluster
+[source,bash]
+----
 
+./kind/shell-based-setup/localK8s.sh -d
+
+----
 If you want to remove everything, like docker network or stored images call, consider calling:
 
 ```bash
-docker images | grep '3 weeks ago' | awk '{print $1 ":" $2}' | xargs -n 1 docker rmi
+
 docker container prune
 docker network prune
 docker system prune
@@ -225,20 +216,24 @@ curl -s "http://localhost:5003/v2/$MY_IMAGE_NAME/manifests/$TAG_NAME" | jq
 ```
 
 
-### Clear container registry
 
-Sometimes its necessary to remove all images from the container registry. For that we created a script
-
-```bash
-./k8s/scripts/clearContainerRegistry.sh
-```
 
 ### Free diskspace
 
 
+Sometimes its necessary to remove all images from the container registry.
+
+[source,bash]
+----
+./kind/shell-based-setup/clearContainerRegistry.sh
+----
+
+
 Free diskspace by clean up docker
-```bash
+[source,bash]
+----
+docker images | grep '3 weeks ago' | awk '{print $1 ":" $2}' | xargs -n 1 docker rmi
 docker system prune
 docker image prune
 docker volume prune
-```
+----
