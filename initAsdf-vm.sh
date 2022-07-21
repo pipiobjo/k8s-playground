@@ -3,7 +3,7 @@
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 CURRENT_DIR=$(pwd)
 
-cd $SCRIPT_DIR/../
+cd $SCRIPT_DIR/
 asdf plugin-add java
 asdf install java adoptopenjdk-17.0.2+8
 asdf local java adoptopenjdk-17.0.2+8

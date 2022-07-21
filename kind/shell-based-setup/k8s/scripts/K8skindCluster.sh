@@ -64,8 +64,25 @@ kubectl wait --namespace kube-system \
 
 _installNginxIngress(){
   INGRESS_IMPL="nginx"
+  # https://artifacthub.io/packages/helm/ingress-nginx/ingress-nginx
+  # https://github.com/kubernetes/ingress-nginx/tree/main/charts/ingress-nginx
+  HELM_CHART_VERSION="4.2.0"
   echo "provide ingress"
-  kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+
+  helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+  helm repo update
+
+  HELM_VALUES=$SCRIPT_DIR/../nginx/helm/values.yaml
+  echo "install helm chart"
+  echo "-referenced values file $HELM_VALUES"
+
+  helm install ingress-nginx ingress-nginx/ingress-nginx \
+    -f $HELM_VALUES \
+    --version "$HELM_CHART_VERSION" \
+    --set controller.hostPort.ports.http=$KIND_NODE_PORT_HTTP \
+    --set controller.hostPort.ports.https=$KIND_NODE_PORT_HTTPS \
+    -n ingress-nginx \
+    --create-namespace
 
   echo "wait for ingress to be ready"
   sleep 15s
@@ -78,10 +95,11 @@ _installNginxIngress(){
 
 _installTraefik(){
   INGRESS_IMPL="traefik"
-#  source $SCRIPT_DIR/k8s/scripts/define-colors
   # https://doc.traefik.io/traefik/getting-started/install-traefik/#use-the-helm-chart
   # https://github.com/traefik/traefik-helm-chart
+  # https://artifacthub.io/packages/helm/traefik/traefik
   TRAEFIK_K8S_NAMESPACE="traefik"
+  HELM_CHART_VERSION="10.24.0"
 
   echo -e "${GREEN} install traefik ${NO_COLOR}"
   echo "create traefik namespace"
@@ -99,6 +117,7 @@ _installTraefik(){
     --set ports.traefik.nodePort=$KIND_NODE_PORT_TRAEFIK \
     --set ports.web.nodePort=$KIND_NODE_PORT_HTTP \
     --set ports.websecure.nodePort=$KIND_NODE_PORT_HTTPS \
+    --version "$HELM_CHART_VERSION" \
 
 
   kubectl rollout status deployment "traefik" -n $TRAEFIK_K8S_NAMESPACE --watch --timeout=15m

@@ -1,4 +1,5 @@
 # check default values file
+# https://github.com/traefik/traefik-helm-chart/blob/v10.24.0/traefik/values.yaml
 service:
   type: NodePort
   #type: LoadBalancer
