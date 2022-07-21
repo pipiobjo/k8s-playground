@@ -63,7 +63,7 @@ kubectl wait --namespace kube-system \
 }
 
 _installNginxIngress(){
-
+  INGRESS_IMPL="nginx"
   echo "provide ingress"
   kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
 
@@ -77,6 +77,7 @@ _installNginxIngress(){
 }
 
 _installTraefik(){
+  INGRESS_IMPL="traefik"
 #  source $SCRIPT_DIR/k8s/scripts/define-colors
   # https://doc.traefik.io/traefik/getting-started/install-traefik/#use-the-helm-chart
   # https://github.com/traefik/traefik-helm-chart
@@ -165,7 +166,37 @@ spec:
     targetPort: 8080
 EOF
 
+if [[ "$INGRESS_IMPL" == "nginx" ]]; then
+    echo "deploy nginx ingress config"
+    cat <<EOF | kubectl apply -f -
+      apiVersion: networking.k8s.io/v1
+      kind: Ingress
+      metadata:
+        name: helloweb
+        namespace: demo
+        annotations:
+            nginx.ingress.kubernetes.io/rewrite-target: /$2
+        labels:
+          app: hello
+      spec:
+        ingressClassName: nginx
+        rules:
+          - http:
+              paths:
+                - path: /demo(/|$)(.*)
+                  pathType: Prefix
+                  backend:
+                    service:
+                      name: helloweb-backend
+                      port:
+                        number: 8080
+EOF
+fi
 
+
+
+if [[ "$INGRESS_IMPL" == "traefik" ]]; then
+  echo "deploy traefik ingress config"
   cat <<EOF | kubectl apply -f -
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
@@ -184,7 +215,6 @@ metadata:
   name: helloweb
   namespace: demo
   annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: /$2
       traefik.ingress.kubernetes.io/router.middlewares: demo-strip-prefix@kubernetescrd
   labels:
     app: hello
@@ -200,6 +230,8 @@ spec:
                 port:
                   number: 8080
 EOF
+fi
+
 
 kubectl -n demo rollout status deployment helloweb --watch --timeout=5m
 
@@ -255,14 +287,14 @@ nodes:
       kubeletExtraArgs:
         node-labels: "ingress-ready=true"
   extraPortMappings:
-  - containerPort: $KIND_NODE_PORT_TRAEFIK
-    hostPort: $K8S_TRAEFIK_DASHBOARD_PORT
-    protocol: TCP
   - containerPort: $KIND_NODE_PORT_HTTP
     hostPort: $K8S_HTTP_PORT
     protocol: TCP
   - containerPort: $KIND_NODE_PORT_HTTPS
     hostPort: $K8S_HTTPS_PORT
+    protocol: TCP
+  - containerPort: $KIND_NODE_PORT_TRAEFIK
+    hostPort: $K8S_TRAEFIK_DASHBOARD_PORT
     protocol: TCP
 
 
@@ -289,15 +321,17 @@ EOF
 
 _initDockerRegistry
 _installMetricServer
-#_installNginxIngress
-_installTraefik
+_installNginxIngress
+#_installTraefik
 _startSamplePod
 
 sleep 5s
 
-echo -e "${GREEN} curl http://localhost:$K8S_TRAEFIK_DASHBOARD_PORT/dashboard/ ${NO_COLOR}"
-curl http://localhost:$K8S_TRAEFIK_DASHBOARD_PORT/dashboard/
-echo ""
+if [[ "$INGRESS_IMPL" == "traefik" ]]; then
+  echo -e "${GREEN} curl http://localhost:$K8S_TRAEFIK_DASHBOARD_PORT/dashboard/ ${NO_COLOR}"
+  curl http://localhost:$K8S_TRAEFIK_DASHBOARD_PORT/dashboard/
+  echo ""
+fi
 
 # sleep 5s
 if [ "$SAMPLE_APP_ACTIVATED" = true ] ; then
