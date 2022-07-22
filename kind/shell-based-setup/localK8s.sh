@@ -31,7 +31,7 @@ for i in "$@"; do
       RESET_K8S=true
       shift
       ;;
-    -rm | --remove)
+    -d | --delete)
       REMOVE_K8S=true
       ;;
     -v | --verbose)
@@ -41,10 +41,6 @@ for i in "$@"; do
      SKIP_INFRASTRUCTURE=true
      shift
      ;;
-#    -l=*|--lib=*)
-#      LIBPATH="${i#*=}"
-#      shift # past argument=value
-#      ;;
     -h|--help)
       SHOW_HELP=true
       shift
