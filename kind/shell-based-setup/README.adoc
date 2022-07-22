@@ -161,37 +161,37 @@ Hostname: helloweb-67dffcd76f-s8mq2
 ----
 If you want to remove everything, like docker network or stored images call, consider calling:
 
-```bash
-
+[source,bash]
+----
 docker container prune
 docker network prune
 docker system prune
 docker volume prune
 docker builder prune
-```
+----
 
 ## Activate kubectl autocompletion
 
 check according to your terminal <https://kubernetes.io/docs/tasks/tools/included/>
 
-Activate for zsh
-
-```bash
+.Activate for zsh
+[source,bash]
+----
 source <(kubectl completion zsh)
-```
+----
 
-Sample Usage
-
-```bash
+.Sample Usage
+[source,bash]
+----
 kubectl -n local get po [Press 'TAB']
-```
+----
 
 ## Kind Troubleshooting
 
-Query Container Reqistry for all images
-
-```bash
-curl -s "http://localhost:5003/v2/_catalog" | jq
+.Query Container Reqistry for all images
+[source,bash]
+----
+$ curl -s "http://localhost:5003/v2/_catalog" | jq
 {
   "repositories": [
     "my-backend",
@@ -200,20 +200,19 @@ curl -s "http://localhost:5003/v2/_catalog" | jq
     "my-workflow"
   ]
 }
+----
 
-```
-
-Query tags for a specific image
-
-```bash
+.Query tags for a specific image
+[source,bash]
+----
 curl -s "http://localhost:5003/v2/$MY_IMAGE_NAME/tags/list" | jq
-```
+----
 
-Query image information for a specific image and tag
-
-```bash
+.Query image information for a specific image and tag
+[source,bash]
+----
 curl -s "http://localhost:5003/v2/$MY_IMAGE_NAME/manifests/$TAG_NAME" | jq
-```
+----
 
 
 
@@ -221,15 +220,14 @@ curl -s "http://localhost:5003/v2/$MY_IMAGE_NAME/manifests/$TAG_NAME" | jq
 ### Free diskspace
 
 
-Sometimes its necessary to remove all images from the container registry.
-
+.Sometimes its necessary to remove all images from the container registry.
 [source,bash]
 ----
 ./kind/shell-based-setup/clearContainerRegistry.sh
 ----
 
 
-Free diskspace by clean up docker
+.Free diskspace by clean up docker
 [source,bash]
 ----
 docker images | grep '3 weeks ago' | awk '{print $1 ":" $2}' | xargs -n 1 docker rmi
