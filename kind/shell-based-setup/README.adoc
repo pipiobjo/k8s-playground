@@ -60,18 +60,13 @@ source <(kind completion zsh)
 ===== k9s
 
 Terminal based UI to interact with your Kubernetes clusters.
-
 <https://k9scli.io/>
-
-
-``
-
 
 === K8s Setup
 
 Setup K8s Cluster
 
-* Setup K8s and update kubectl config
+* Setup K8S and update kubectl config
 * Install Ingress (nginx / traefik)
 * Install Metriks Server
 
