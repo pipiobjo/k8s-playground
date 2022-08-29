@@ -32,8 +32,6 @@ The provided checkoutExercises.sh is meant for the initial checkout of the proje
 
 
 
-=== K8S Basics
-
-Learn how to provide a custom golang greeting application with existing probe endpoints in kubernetes.
-
-https://github.com/pipiobjo/k8s-playground-basics
+* K8S Basics
++
+Learn how to provide a custom golang greeting application with existing probe endpoints in kubernetes. link:https://github.com/pipiobjo/k8s-playground-basics[]
