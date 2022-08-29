@@ -1,5 +1,6 @@
 = Local Development Environment
 :toc:
+:autofit-option:
 :caution-caption: ☠
 :important-caption: ❗
 :note-caption: 🛈
