@@ -17,6 +17,97 @@ endif::[]
 In this repo a local kind setup is provided.
 Also, it is used to bundle some tutorials and pocs which are using that kind cluster.
 
+IMPORTANT: *WindowsUser*: To be able to run k8s in docker some additional steps are necessary. See documentation link:windows-and-docker/README.adoc[here]
+
+
+== Start the k8s cluster
+
+Detailed Setup instructions link:kind/shell-based-setup/README.adoc[]
+
+
+[source,bash]
+----
+./initAsdf-vm.sh
+./kind/shell-based-setup/localK8s.sh
+----
+
+Output should be similar to the following
+[source,bash]
+----
+Kind is not running ... starting it
+Creating cluster "k8s-playground" ...
+• Ensuring node image (kindest/node:v1.24.0) 🖼  ...
+✓ Ensuring node image (kindest/node:v1.24.0) 🖼
+• Preparing nodes 📦   ...
+✓ Preparing nodes 📦
+• Writing configuration 📜  ...
+✓ Writing configuration 📜
+• Starting control-plane 🕹️  ...
+✓ Starting control-plane 🕹️
+• Installing CNI 🔌  ...
+✓ Installing CNI 🔌
+• Installing StorageClass 💾  ...
+✓ Installing StorageClass 💾
+Set kubectl context to "kind-k8s-playground"
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-k8s-playground
+
+Have a nice day! 👋
+configmap/local-registry-hosting created
+kind docker registry is not running ... starting
+3a4333fcfb3aa39c5da7a1be9b16a545a329a35f752b56bebf2070e89e888d0d
+install metric server
+serviceaccount/metrics-server created
+clusterrole.rbac.authorization.k8s.io/system:aggregated-metrics-reader created
+clusterrole.rbac.authorization.k8s.io/system:metrics-server created
+rolebinding.rbac.authorization.k8s.io/metrics-server-auth-reader created
+clusterrolebinding.rbac.authorization.k8s.io/metrics-server:system:auth-delegator created
+clusterrolebinding.rbac.authorization.k8s.io/system:metrics-server created
+service/metrics-server created
+deployment.apps/metrics-server created
+apiservice.apiregistration.k8s.io/v1beta1.metrics.k8s.io created
+deployment.apps/metrics-server patched
+waiting for metrics deployment ...
+deployment.apps/metrics-server condition met
+provide ingress
+
+...
+
+pod/ingress-nginx-controller-5dff8dcf67-tpbvh condition met
+install sample app
+1.0: Pulling from google-samples/hello-app
+Digest: sha256:88b205d7995332e10e836514fbfd59ecaf8976fc15060cd66e85cdcebe7fb356
+Status: Image is up to date for gcr.io/google-samples/hello-app:1.0
+gcr.io/google-samples/hello-app:1.0
+The push refers to repository [localhost:5003/hello-app]
+6aebdb5560a6: Pushed
+8d3ac3489996: Pushed
+1.0: digest: sha256:88b205d7995332e10e836514fbfd59ecaf8976fc15060cd66e85cdcebe7fb356 size: 739
+namespace/demo created
+deployment.apps/helloweb created
+service/helloweb-backend created
+deploy nginx ingress config
+ingress.networking.k8s.io/helloweb created
+Waiting for deployment "helloweb" rollout to finish: 0 of 1 updated replicas are available...
+deployment "helloweb" successfully rolled out
+ curl http://localhost:48080/demo/hello
+Hello, world!
+Version: 1.0.0
+Hostname: helloweb-67dffcd76f-pszns
+ curl -k https://localhost:48443/demo/hello
+Hello, world!
+Version: 1.0.0
+Hostname: helloweb-67dffcd76f-pszns
+
+
+----
+
+Ensure that the test curl commands are successful, you can also check them with your browser:
+
+* http: http://localhost:48080/demo/hello
+* https: https://localhost:48443/demo/hello
+
 
 
 == Exercises
