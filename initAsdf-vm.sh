@@ -13,8 +13,10 @@ asdf install golang 1.18.2
 asdf local golang 1.18.2
 
 asdf plugin-add kind
-asdf install kind 0.14.0
-asdf local kind 0.14.0
+asdf install kind 0.16.0
+asdf local kind 0.16.0
+#asdf install kind 0.15.0
+#asdf local kind 0.15.0
 
 KUBECTL_VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt | cut -c2-)
 echo "$KUBECTL_VERSION=$KUBECTL_VERSION"
