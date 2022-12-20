@@ -126,3 +126,19 @@ The provided checkoutExercises.sh is meant for the initial checkout of the proje
 * K8S Basics
 +
 Learn how to provide a custom golang greeting application with existing probe endpoints in kubernetes. link:https://github.com/pipiobjo/k8s-playground-basics[]
+
+
+== POCs
+
+The provided checkoutPOCs.sh is meant for the initial checkout of the project to streamline folder structure and names.
+
+[source,bash]
+----
+
+./checkoutPOCs.sh
+
+----
+
+* Compare programming languages
++
+Repo to test the differences in performance between different languages and frameworks to choose the best for your next project. link:https://github.com/pipiobjo/compare-programming-languages[]
