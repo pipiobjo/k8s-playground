@@ -30,9 +30,36 @@ wsl --install
 wsl --install -d Ubuntu
 ```
 
+.WSL Install Ubuntu in Admin CMD
+```bash
+wsl --reset Ubuntu
+```
+
+
+## Nice to have
+
 Install https://docs.microsoft.com/de-DE/windows/terminal/install[Windows Terminal]
 
-## Docker Setup
+
+## WSL2 Setup
+
+To run docker in WSL2 and access it from your windows.
+The docker daemon has to be exposed via tcp. This will be done by the following steps.
+
+
+Since Ubuntu 22.04 we created a simple installation script
+
+## Ubuntu 22.04
+
+```bash
+curl -sf -L https://raw.githubusercontent.com/pipiobjo/k8s-playground/main/windows-and-docker/ubuntu-generic.sh | bash
+```
+
+
+## Before Ubuntu 22.04
+
+
+### Docker Setup
 
 Uninstall Docker Desktop
 
@@ -50,7 +77,7 @@ sudo apt install docker-ce docker-ce-cli containerd.io
 sudo usermod -aG docker $USER
 ```
 
-### Configure docker daemon
+#### Configure docker daemon
 
 .On WSL2:
 ```bash
@@ -64,7 +91,7 @@ sudo bash -c 'cat <<EOF >>/etc/docker/daemon.json
    "hosts": ["unix:///mnt/wsl/shared-docker/docker.sock", "tcp://0.0.0.0:2375"],
    "features": {
         "buildkit": true
-   },
+   }
 }
 EOF'
 
@@ -109,6 +136,13 @@ start microsoft-edge:http://localhost:8080
 
 
 ### Connecting Windows Docker CLI to WSL2 Docker Daemon
+
+If not already installed, install chocolatey on windows via powershell as Administrator
+```PS
+Set-ExecutionPolicy Bypass -Scope Process -Force; `
+  iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+```
+
 
 Install only the docker cli on windows
 ```PS

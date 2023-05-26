@@ -1,2 +1,5 @@
 *.iml
 /.idea/
+**/*.iso
+**/*ovmf
+**/*.fd
