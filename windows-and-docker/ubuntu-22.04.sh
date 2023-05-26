@@ -33,7 +33,7 @@ newgrp docker
 #DOCKER_DAEMON_PATH=$(which dockerd)
 #sudo bash -c "echo \"$USER ALL = (root) NOPASSWD: $DOCKER_DAEMON_PATH *\" >> /etc/sudoers"
 
-sudo bash -c 'cat <<EOF >>/lib/systemd/system/docker-tcp.socket
+sudo bash -c 'cat <<EOF >/lib/systemd/system/docker-tcp.socket
 [Unit]
 Description=Docker Socket for the API
 PartOf=docker.service
