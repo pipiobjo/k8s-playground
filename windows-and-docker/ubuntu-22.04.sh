@@ -4,14 +4,14 @@ USERNAME=$USER
 echo "Setup docker for $USERNAME "
 
 sudo apt update && sudo apt upgrade
-sudo apt remove docker docker-engine docker.io containerd runc
-sudo apt install --no-install-recommends apt-transport-https ca-certificates curl gnupg2
+sudo apt -y remove docker docker-engine docker.io containerd runc
+sudo apt -y install --no-install-recommends apt-transport-https ca-certificates curl gnupg2
 source /etc/os-release
 curl -fsSL https://download.docker.com/linux/${ID}/gpg | sudo apt-key add -
 echo "deb [arch=amd64] https://download.docker.com/linux/${ID} ${VERSION_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/docker.list
 sudo apt update
-sudo apt install docker.io
-sudo apt autoremove
+sudo apt -y install docker.io
+sudo apt -y autoremove
 
 echo "Add user $USER to docker group"
 sudo groupadd docker
