@@ -1,4 +1,9 @@
 # Windows Docker Setup
+:toc:
+
+## Optional: Install Windows Terminal
+
+Install https://docs.microsoft.com/de-DE/windows/terminal/install[Windows Terminal]
 
 
 ## Enable Hyper-V 
@@ -15,7 +20,13 @@ Start - Search for "Tune Windows features On & Off"
 image::images/activate-hypervisor-windows10.png[]
 
 
-## wsl setup
+
+## Docker Setup
+
+Uninstall Docker Desktop
+
+
+## WSL Installation and providing Ubuntu
 
 check https://docs.microsoft.com/de-de/windows/wsl/install
 
@@ -30,15 +41,12 @@ wsl --install
 wsl --install -d Ubuntu
 ```
 
-.WSL Install Ubuntu in Admin CMD
+
+.To remove it you can use
 ```bash
 wsl --reset Ubuntu
 ```
 
-
-## Nice to have
-
-Install https://docs.microsoft.com/de-DE/windows/terminal/install[Windows Terminal]
 
 
 ## WSL2 Setup
@@ -57,11 +65,6 @@ curl -sf -L https://raw.githubusercontent.com/pipiobjo/k8s-playground/main/windo
 
 
 ## Before Ubuntu 22.04
-
-
-### Docker Setup
-
-Uninstall Docker Desktop
 
 
 .On WSL2:
@@ -119,7 +122,7 @@ chmod u+x ~/dockerStartup.sh
 echo "source ~/dockerStartup.sh" >> ~/.profile
 ```
 
-### Testing the setup
+## Testing the setup
 
 .On WSL2:
 ```bash
@@ -135,7 +138,7 @@ start microsoft-edge:http://localhost:8080
 
 
 
-### Connecting Windows Docker CLI to WSL2 Docker Daemon
+## Connecting Windows Docker CLI to WSL2 Docker Daemon
 
 If not already installed, install chocolatey on windows via powershell as Administrator
 ```PS
