@@ -53,3 +53,8 @@ sudo systemctl stop docker.service
 sudo systemctl enable docker-tcp.socket
 sudo systemctl start docker-tcp.socket
 sudo systemctl start docker.service
+
+echo "Docker setup done"
+
+echo "Check docker"
+docker ps
