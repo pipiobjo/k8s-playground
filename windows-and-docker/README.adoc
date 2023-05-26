@@ -55,9 +55,7 @@ To run docker in WSL2 and access it from your windows.
 The docker daemon has to be exposed via tcp. This will be done by the following steps.
 
 
-Since Ubuntu 22.04 we created a simple installation script
-
-## Ubuntu 22.04
+## With Ubuntu 22.04 and later
 
 ```bash
 curl -sf -L https://raw.githubusercontent.com/pipiobjo/k8s-playground/main/windows-and-docker/ubuntu-generic.sh | bash
