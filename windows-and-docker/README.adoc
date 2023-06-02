@@ -189,7 +189,11 @@ https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools
 
 ### win 11
 https://getlabsdone.com/how-to-install-windows-11-on-kvm/
+
+[source, bash]
+----
 sudo apt install qemu-kvm bridge-utils virt-manager libosinfo-bin swtpm swtpm-tools -y
+----
 
 https://dev.to/christianbueno1/install-windows-11-virtual-machine-on-kvm-libvirt-qemu-virt-manager-in-linux-fedora-3637-rpm-based-distribution-1nkd
 
