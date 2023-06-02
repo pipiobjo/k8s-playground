@@ -176,11 +176,24 @@ docker context use win2linuxdocker
 
 ## Nested virtualization in linux - to test the shit ;-)
 
+### general
+
 https://docs.fedoraproject.org/en-US/quick-docs/using-nested-virtualization-in-kvm/
-
-
 systemctl restart libvirtd
 
 To enable shared clipboard
 https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe
+
+
+
+
+### win 11
+https://getlabsdone.com/how-to-install-windows-11-on-kvm/
+sudo apt install qemu-kvm bridge-utils virt-manager libosinfo-bin swtpm swtpm-tools -y
+
+https://dev.to/christianbueno1/install-windows-11-virtual-machine-on-kvm-libvirt-qemu-virt-manager-in-linux-fedora-3637-rpm-based-distribution-1nkd
+
+
+
+
 
