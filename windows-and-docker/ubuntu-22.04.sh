@@ -57,4 +57,4 @@ sudo systemctl start docker.service
 echo "Docker setup done"
 
 echo "Check docker"
-docker ps
+echo 'Please restart your shell and run "docker ps" to check if everything worked fine'
